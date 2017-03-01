@@ -1,5 +1,6 @@
 package app.stocker;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -77,11 +78,17 @@ public class DisplayProductsActivity extends AppCompatActivity {
     private void registerClick() {
         ListView list = (ListView) findViewById(R.id.product_list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        final Context context = getBaseContext();
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int pos,
                                     long id) {
-                Toast.makeText(getBaseContext(), productList.get(pos).getTitle(), Toast.LENGTH_SHORT).show();
+                Product product = productList.get(pos);
+               // Toast.makeText(getBaseContext(), product.getTitle(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, AddProductsActivity.class);
+                String json = new Gson().toJson(product);
+                Log.d("Clicked product: ", json);
+                intent.putExtra("clickedProduct", json);
+                startActivity(intent);
             }
         });
     }

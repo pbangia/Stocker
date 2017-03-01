@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">My First App</string>
+    <string name="app_name">Stocker</string>
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
     <string name="button_order">Orders</string>
     <string name="button_product">Products</string>
     <string name="button_category">Categories</string>
     <string name="button_alert">Alerts</string>
-    <string name="title_activity_display_products">DisplayProductsActivity</string>
+    <string name="title_activity_display_products">Products</string>
     <string name="edit_product_title">Enter Title</string>
     <string name="edit_product_quantity">0</string>
     <string name="edit_product_notes">Edit Product Notes</string>
