@@ -51,6 +51,19 @@
         android:layout_height="wrap_content"
         android:hint="@string/edit_product_notes"
         android:inputType="textMultiLine" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Category:" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_product_category"
+        android:layout_weight="1" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
