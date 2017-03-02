@@ -39,14 +39,15 @@ public class ProductCategoriesActivity extends AppCompatActivity {
             }
         });*/
         SharedPreferences prefs = getSharedPreferences("categoryList",MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
 
-        categoryList.add("category 1");
-        categoryList.add("category 2");
-        categoryList.add("category 3");
-        String json = new Gson().toJson(categoryList);
-        prefsEditor.putString("categories", json);
-        prefsEditor.commit();
+        if (!prefs.contains("categories")) {
+            SharedPreferences.Editor prefsEditor = prefs.edit();
+            categoryList.add("All");
+            String json = new Gson().toJson(categoryList);
+            prefsEditor.putString("categories", json);
+            prefsEditor.commit();
+        }
+
 
 
     }
@@ -58,6 +59,7 @@ public class ProductCategoriesActivity extends AppCompatActivity {
     }
 
     private void populateCategoryList() {
+        categoryList = new ArrayList<>();
         SharedPreferences prefs = getSharedPreferences("categoryList", MODE_PRIVATE);
         String json = prefs.getString("categories", "");
         categoryList = new Gson().fromJson(json, ArrayList.class);
