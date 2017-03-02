@@ -1,12 +1,18 @@
 package app.stocker;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,6 +34,9 @@ public class AddProductsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_products);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
 
         Spinner categorySpinner = (Spinner) findViewById(R.id.edit_product_category);
         SharedPreferences prefs = getSharedPreferences("categoryList", MODE_PRIVATE);
@@ -72,6 +81,45 @@ public class AddProductsActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.actionbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                deleteProduct();
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+    private void deleteProduct(){
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Product")
+                .setMessage("Do you want to delete this product?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        EditText titleTxt = (EditText) findViewById(R.id.edit_product_title);
+                        String title = titleTxt.getText().toString();
+                        SharedPreferences.Editor prefsEditor = getSharedPreferences("products",MODE_PRIVATE).edit();
+                        prefsEditor.remove(title);
+                        prefsEditor.commit();
+
+                        Toast.makeText(getBaseContext(), title+" deleted.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
+    }
     public void saveProduct(View view) {
         // Do something in response to button
         EditText titleTxt = (EditText) findViewById(R.id.edit_product_title);

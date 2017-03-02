@@ -14,5 +14,6 @@
     <string name="button_save">Save</string>
     <string name="title_activity_product_categories">ProductCategoriesActivity</string>
     <string name="edit_category_title">Enter Title</string>
+    <string name="action_delete">Delete</string>
 
 </resources>
