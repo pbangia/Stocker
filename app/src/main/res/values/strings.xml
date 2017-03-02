@@ -12,5 +12,7 @@
     <string name="edit_product_notes">Edit Product Notes</string>
     <string name="edit_product_price">$0</string>
     <string name="button_save">Save</string>
+    <string name="title_activity_product_categories">ProductCategoriesActivity</string>
+    <string name="edit_category_title">Enter Title</string>
 
 </resources>

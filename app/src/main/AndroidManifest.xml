@@ -19,7 +19,12 @@
             android:name=".DisplayProductsActivity"
             android:label="@string/title_activity_display_products"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddProductsActivity"></activity>
+        <activity android:name=".AddProductsActivity" />
+        <activity
+            android:name=".ProductCategoriesActivity"
+            android:label="@string/title_activity_product_categories"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddCategoryActivity"></activity>
     </application>
 
 </manifest>

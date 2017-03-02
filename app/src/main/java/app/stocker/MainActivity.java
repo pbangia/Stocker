@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showProducts(View view) {
         // Do something in response to button
-        Intent intent = new Intent(this, DisplayProductsActivity.class);
+        Intent intent = new Intent(this, ProductCategoriesActivity.class);
         startActivity(intent);
     }
 }
