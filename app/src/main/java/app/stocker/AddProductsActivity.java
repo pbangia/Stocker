@@ -29,7 +29,31 @@ public class AddProductsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_products);
 
-        String json = getIntent().getStringExtra("clickedProduct");
+        Spinner categorySpinner = (Spinner) findViewById(R.id.edit_product_category);
+        SharedPreferences prefs = getSharedPreferences("categoryList", MODE_PRIVATE);
+        String json = prefs.getString("categories", "");
+        List list = new Gson().fromJson(json, ArrayList.class);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(dataAdapter);
+//        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View viewClicked, int pos,
+//                                       long id) {
+//                Toast.makeText(getBaseContext(),category.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//                // TODO Auto-generated method stub
+//            }
+//        });
+
+
+        json = getIntent().getStringExtra("clickedProduct");
         if (json != null){
             Product product = new Gson().fromJson(json, Product.class);
             TextView title = (TextView) findViewById(R.id.edit_product_title);
@@ -41,32 +65,10 @@ public class AddProductsActivity extends AppCompatActivity {
             qty.setText(Integer.toString(product.getQuantity()));
             price.setText(String.format(Locale.getDefault(),"%.2f", product.getPrice()));
             notes.setText(product.getNotes());
+            ArrayAdapter arrayAdapter = (ArrayAdapter) categorySpinner.getAdapter();
+            categorySpinner.setSelection(arrayAdapter.getPosition(product.getCategory()));
+
         }
-
-        final Spinner category = (Spinner) findViewById(R.id.edit_product_category);
-        List<String> list = new ArrayList<String>();
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        category.setAdapter(dataAdapter);
-        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View viewClicked, int pos,
-                                    long id) {
-                Toast.makeText(getBaseContext(),category.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-            }
-        });
-
 
     }
 
@@ -84,13 +86,17 @@ public class AddProductsActivity extends AppCompatActivity {
         EditText priceTxt = (EditText) findViewById(R.id.edit_product_price);
         double price = Double.parseDouble(priceTxt.getText().toString());
 
+
+        Spinner categorySpinner = (Spinner) findViewById(R.id.edit_product_category);
+        String selected = categorySpinner.getSelectedItem().toString();
+
         if (title.isEmpty()) {
             Snackbar.make(view, "Please fill title.", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             return;
         }
 
-        Product product = new Product(title, qty, notes, price);
+        Product product = new Product(title, qty, notes, price, selected);
         SharedPreferences prefs = getSharedPreferences("products",MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = prefs.edit();
         Gson gson = new Gson();
