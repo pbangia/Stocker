@@ -52,6 +52,7 @@ public class DisplayProductsActivity extends AppCompatActivity {
 
     private void populateProductList() {
         SharedPreferences prefs = getSharedPreferences("products", MODE_PRIVATE);
+        String category = getIntent().getStringExtra("clickedCategory");
         Map<String,?> keys = prefs.getAll();
         Gson gson = new Gson();
         productList = new ArrayList<>();
@@ -61,7 +62,9 @@ public class DisplayProductsActivity extends AppCompatActivity {
             String json = prefs.getString(entry.getKey(), "");
             if (!json.isEmpty()){
                 Product product = gson.fromJson(json, Product.class);
-                productList.add(product);
+                if (category.equals("All") || category.equals(product.getCategory())) {
+                    productList.add(product);
+                }
             }
         }
     }
