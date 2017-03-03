@@ -3,12 +3,18 @@ package app.stocker;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,8 +30,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static app.stocker.R.styleable.ActionMode;
+
 public class DisplayProductsActivity extends AppCompatActivity {
     private List<Product> productList = new ArrayList<Product>();
+    private Product listItem;
+    private Object mActionMode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,13 +85,64 @@ public class DisplayProductsActivity extends AppCompatActivity {
 
     private void populateListView() {
 
-        ListView list = (ListView) findViewById(R.id.product_list);
+        final ListView list = (ListView) findViewById(R.id.product_list);
         ArrayAdapter<Product> adapter = new ProductListAdapter(DisplayProductsActivity.this, R.layout.item_view, productList);
         list.setAdapter(adapter);
         list.setEmptyView(findViewById(R.id.empty));
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                listItem = productList.get(position);
+                if (mActionMode==null) {
+                    mActionMode = DisplayProductsActivity.this.startActionMode(mActionModeCallback);
+                }
+                return false;
+            }
+        });
         //list.setAdapter(new ArrayAdapter<String>(DisplayProductsActivity.this, android.R.layout.simple_list_item_1 , productList));
 
     }
+
+    private ActionMode.Callback mActionModeCallback = new android.view.ActionMode.Callback() {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.context_menu, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));
+                        }
+                        catch(Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 400);
+
+            }
+            mActionMode = null;
+
+        }
+    };
 
     private void registerClick() {
         ListView list = (ListView) findViewById(R.id.product_list);
