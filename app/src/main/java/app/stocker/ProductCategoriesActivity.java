@@ -65,6 +65,9 @@ public class ProductCategoriesActivity extends AppCompatActivity {
     public void addCategory(View view) {
         // TODO: add category activity
         Intent intent = new Intent(this, AddCategoryActivity.class);
+        if (listItem!=null){
+            intent.putExtra("selectedCategory", listItem);
+        }
         startActivity(intent);
     }
 
@@ -117,6 +120,10 @@ public class ProductCategoriesActivity extends AppCompatActivity {
                     ProductCategoriesActivity.this.deleteCategoryOption(listItem);
                     mode.finish();
                     return true;
+                case R.id.action_edit:
+                    ProductCategoriesActivity.this.addCategory(null);
+                    mode.finish();
+                    return true;
             }
             return false;
         }
@@ -124,6 +131,7 @@ public class ProductCategoriesActivity extends AppCompatActivity {
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
+            listItem = null;
 
         }
     };

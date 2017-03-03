@@ -22,7 +22,7 @@ import java.util.Locale;
 import app.stocker.data.Product;
 
 public class AddCategoryActivity extends AppCompatActivity {
-
+    String selectedCategory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,12 +30,10 @@ public class AddCategoryActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        String json = getIntent().getStringExtra("clickedCategory");
-        if (json != null){
-            Product product = new Gson().fromJson(json, Product.class);
+        selectedCategory = getIntent().getStringExtra("selectedCategory");
+        if (selectedCategory != null){
             TextView title = (TextView) findViewById(R.id.edit_category_title);
-
-            title.setText(product.getTitle());
+            title.setText(selectedCategory);
         }
 
 
@@ -51,11 +49,23 @@ public class AddCategoryActivity extends AppCompatActivity {
                     .setAction("Action", null).show();
             return;
         }
+
+        if (selectedCategory !=null && selectedCategory.equals(title)){
+            finish();
+            return;
+        }
+
         Gson gson = new Gson();
         SharedPreferences prefs = getSharedPreferences("categoryList",MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = prefs.edit();
         String previousList = prefs.getString("categories", "");
         List categories = gson.fromJson(previousList, ArrayList.class);
+
+        if (selectedCategory!=null) {
+            categories.remove(selectedCategory);
+
+        }
+
         categories.add(title);
 
         String newList = gson.toJson(categories);
