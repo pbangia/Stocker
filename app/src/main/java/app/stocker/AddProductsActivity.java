@@ -46,6 +46,11 @@ public class AddProductsActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(dataAdapter);
+
+        String category = getIntent().getStringExtra("clickedCategory");
+        ArrayAdapter arrayAdapter = (ArrayAdapter) categorySpinner.getAdapter();
+        categorySpinner.setSelection(arrayAdapter.getPosition(category));
+
 //        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 //
 //            @Override
@@ -74,8 +79,9 @@ public class AddProductsActivity extends AppCompatActivity {
             qty.setText(Integer.toString(product.getQuantity()));
             price.setText(String.format(Locale.getDefault(),"%.2f", product.getPrice()));
             notes.setText(product.getNotes());
-            ArrayAdapter arrayAdapter = (ArrayAdapter) categorySpinner.getAdapter();
             categorySpinner.setSelection(arrayAdapter.getPosition(product.getCategory()));
+
+            setTitle(product.getTitle());
 
         }
 

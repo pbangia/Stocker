@@ -7,13 +7,16 @@
     <string name="button_category">Categories</string>
     <string name="button_alert">Alerts</string>
     <string name="title_activity_display_products">Products</string>
+    <string name="title_activity_product_categories">Categories</string>
+    <string name="title_activity_add_products">Edit Product</string>
+    <string name="title_activity_add_category">Edit Category</string>
     <string name="edit_product_title">Enter Title</string>
     <string name="edit_product_quantity">0</string>
     <string name="edit_product_notes">Edit Product Notes</string>
     <string name="edit_product_price">$0</string>
     <string name="button_save">Save</string>
-    <string name="title_activity_product_categories">ProductCategoriesActivity</string>
     <string name="edit_category_title">Enter Title</string>
     <string name="action_delete">Delete</string>
+    <string name="no_products">No products.</string>
 
 </resources>

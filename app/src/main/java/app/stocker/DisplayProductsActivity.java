@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import app.stocker.adapters.ProductListAdapter;
@@ -47,12 +48,15 @@ public class DisplayProductsActivity extends AppCompatActivity {
     public void addProducts(View view) {
         // Do something in response to button
         Intent intent = new Intent(this, AddProductsActivity.class);
+        String category = getIntent().getStringExtra("clickedCategory");
+        intent.putExtra("clickedCategory",category);
         startActivity(intent);
     }
 
     private void populateProductList() {
         SharedPreferences prefs = getSharedPreferences("products", MODE_PRIVATE);
         String category = getIntent().getStringExtra("clickedCategory");
+        setTitle(category);
         Map<String,?> keys = prefs.getAll();
         Gson gson = new Gson();
         productList = new ArrayList<>();
@@ -74,6 +78,7 @@ public class DisplayProductsActivity extends AppCompatActivity {
         ListView list = (ListView) findViewById(R.id.product_list);
         ArrayAdapter<Product> adapter = new ProductListAdapter(DisplayProductsActivity.this, R.layout.item_view, productList);
         list.setAdapter(adapter);
+        list.setEmptyView(findViewById(R.id.empty));
         //list.setAdapter(new ArrayAdapter<String>(DisplayProductsActivity.this, android.R.layout.simple_list_item_1 , productList));
 
     }
