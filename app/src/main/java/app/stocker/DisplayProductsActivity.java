@@ -1,6 +1,7 @@
 package app.stocker;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +37,7 @@ import static app.stocker.R.styleable.ActionMode;
 
 public class DisplayProductsActivity extends AppCompatActivity {
     private List<Product> productList = new ArrayList<Product>();
+    private ArrayAdapter<Product> adapter;
     private Product listItem;
     private Object mActionMode;
     @Override
@@ -86,7 +90,7 @@ public class DisplayProductsActivity extends AppCompatActivity {
     private void populateListView() {
 
         final ListView list = (ListView) findViewById(R.id.product_list);
-        ArrayAdapter<Product> adapter = new ProductListAdapter(DisplayProductsActivity.this, R.layout.item_view, productList);
+        adapter = new ProductListAdapter(DisplayProductsActivity.this, R.layout.item_view, productList);
         list.setAdapter(adapter);
         list.setEmptyView(findViewById(R.id.empty));
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -96,11 +100,30 @@ public class DisplayProductsActivity extends AppCompatActivity {
                 if (mActionMode==null) {
                     mActionMode = DisplayProductsActivity.this.startActionMode(mActionModeCallback);
                 }
-                return false;
+                return true;
             }
         });
         //list.setAdapter(new ArrayAdapter<String>(DisplayProductsActivity.this, android.R.layout.simple_list_item_1 , productList));
 
+    }
+
+    private void deleteProduct(final Product product ){
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Product")
+                .setMessage("Do you want to delete this product?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        SharedPreferences.Editor prefsEditor = getSharedPreferences("products",MODE_PRIVATE).edit();
+                        prefsEditor.remove(product.getTitle());
+                        prefsEditor.commit();
+                        adapter.remove(listItem);
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(getBaseContext(), product.getTitle()+" deleted.", Toast.LENGTH_SHORT).show();
+
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
     }
 
     private ActionMode.Callback mActionModeCallback = new android.view.ActionMode.Callback() {
@@ -119,6 +142,12 @@ public class DisplayProductsActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_delete2:
+                    DisplayProductsActivity.this.deleteProduct(listItem);
+                    mode.finish();
+                    return true;
+            }
             return false;
         }
 
