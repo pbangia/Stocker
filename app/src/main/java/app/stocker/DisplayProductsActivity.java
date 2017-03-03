@@ -124,21 +124,6 @@ public class DisplayProductsActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));
-                        }
-                        catch(Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }
-                }, 400);
-
-            }
             mActionMode = null;
 
         }
