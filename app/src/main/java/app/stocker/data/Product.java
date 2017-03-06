@@ -6,6 +6,17 @@ public class Product {
     private int quantity;
     private String notes;
     private String category = "All";
+    private long barcode;
+
+    public long getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(long barcode) {
+        this.barcode = barcode;
+    }
+
+
 
     public String getCategory() { return category; }
 
@@ -56,12 +67,13 @@ public class Product {
         this.price = price;
     }
 
-    public Product(String title, int quantity, String notes, double price, String category){
+    public Product(String title, int quantity, String notes, double price, String category, long barcode){
         this.title = title;
         this.quantity = quantity;
         this.notes = notes;
         this.price = price;
         this.category = category;
+        this.barcode = barcode;
     }
 
 }

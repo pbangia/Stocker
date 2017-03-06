@@ -40,16 +40,8 @@ public class ProductCategoriesActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-/*        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
 
-            }
-        });*/
         SharedPreferences prefs = getSharedPreferences("categoryList",MODE_PRIVATE);
-
         if (!prefs.contains("categories")) {
             SharedPreferences.Editor prefsEditor = prefs.edit();
             categoryList.add("All");
@@ -57,18 +49,14 @@ public class ProductCategoriesActivity extends AppCompatActivity {
             prefsEditor.putString("categories", json);
             prefsEditor.commit();
         }
-
-
-
     }
 
-    public void addCategory(View view) {
-        // TODO: add category activity
-        Intent intent = new Intent(this, AddCategoryActivity.class);
-        if (listItem!=null){
-            intent.putExtra("selectedCategory", listItem);
-        }
-        startActivity(intent);
+    @Override
+    public void onResume() {
+        super.onResume();
+        populateCategoryList();
+        populateListView();
+        registerClick();
     }
 
     private void populateCategoryList() {
@@ -82,8 +70,6 @@ public class ProductCategoriesActivity extends AppCompatActivity {
     private void populateListView() {
 
         ListView list = (ListView) findViewById(R.id.category_list);
-       // ArrayAdapter<Product> adapter = new ProductListAdapter(DisplayProductsActivity.this, R.layout.item_view, productList);
-        //list.setAdapter(adapter);
         adapter = new ArrayAdapter<String>(ProductCategoriesActivity.this, android.R.layout.simple_list_item_1 , categoryList);
         list.setAdapter(adapter);
         list.setEmptyView(findViewById(R.id.empty));
@@ -95,6 +81,22 @@ public class ProductCategoriesActivity extends AppCompatActivity {
                     mActionMode = ProductCategoriesActivity.this.startActionMode(mActionModeCallback);
                 }
                 return true;
+            }
+        });
+    }
+
+    private void registerClick() {
+        ListView list = (ListView) findViewById(R.id.category_list);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            final Context context = getBaseContext();
+            @Override
+            public void onItemClick(AdapterView<?> parent, View viewClicked, int pos,
+                                    long id) {
+                String category = categoryList.get(pos);
+                Intent intent = new Intent(context, DisplayProductsActivity.class);
+                Log.d("Clicked category: ", category);
+                intent.putExtra("clickedCategory", category);
+                startActivity(intent);
             }
         });
     }
@@ -135,6 +137,14 @@ public class ProductCategoriesActivity extends AppCompatActivity {
 
         }
     };
+
+    public void addCategory(View view) {
+        Intent intent = new Intent(this, AddCategoryActivity.class);
+        if (listItem!=null){
+            intent.putExtra("selectedCategory", listItem);
+        }
+        startActivity(intent);
+    }
 
     private void deleteCategory(boolean withContents, String category) {
         SharedPreferences prefs = getSharedPreferences("categoryList",MODE_PRIVATE);
@@ -204,53 +214,6 @@ public class ProductCategoriesActivity extends AppCompatActivity {
                     }
                 })
             .create().show();
-    }
-
-    private void registerClick() {
-        ListView list = (ListView) findViewById(R.id.category_list);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            final Context context = getBaseContext();
-            @Override
-            public void onItemClick(AdapterView<?> parent, View viewClicked, int pos,
-                                    long id) {
-                String category = categoryList.get(pos);
-                // Toast.makeText(getBaseContext(), product.getTitle(), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context, DisplayProductsActivity.class);
-                Log.d("Clicked category: ", category);
-                intent.putExtra("clickedCategory", category);
-                startActivity(intent);
-            }
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        populateCategoryList();
-        populateListView();
-        registerClick();
-//        Gson gson = new Gson();
-
-//
-//        String json = prefs.getString("test", "");
-//        if (!json.isEmpty()){
-//            Product product = gson.fromJson(json, Product.class);
-//            View view = findViewById(R.id.content_display_products);
-//            Snackbar.make(view, product.getTitle()+product.getQuantity(), Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show();
-//        }
-
-
-//        ListView lvName = (ListView) findViewById(R.id.lv_Name);
-//        lvName.setAdapter(new ArrayAdapter<String>(DisplayProductsActivity.this, android.R.layout.simple_list_item_1 , productList));
-//        lvName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-//                                    long arg3) {
-//                Toast.makeText(getBaseContext(), productList.get(arg2), Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
 }

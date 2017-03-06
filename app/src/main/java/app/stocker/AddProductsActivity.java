@@ -1,5 +1,6 @@
 package app.stocker;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -23,6 +25,8 @@ import android.widget.Toast;
 
 import app.stocker.data.Product;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +40,6 @@ public class AddProductsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_products);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-
 
         Spinner categorySpinner = (Spinner) findViewById(R.id.edit_product_category);
         SharedPreferences prefs = getSharedPreferences("categoryList", MODE_PRIVATE);
@@ -74,17 +77,45 @@ public class AddProductsActivity extends AppCompatActivity {
             TextView qty = (TextView) findViewById(R.id.edit_product_quantity);
             TextView price = (TextView) findViewById(R.id.edit_product_price);
             TextView notes = (TextView) findViewById(R.id.edit_product_notes);
+            TextView barcode = (TextView) findViewById(R.id.edit_product_barcode);
 
             title.setText(product.getTitle());
             qty.setText(Integer.toString(product.getQuantity()));
             price.setText(String.format(Locale.getDefault(),"%.2f", product.getPrice()));
             notes.setText(product.getNotes());
             categorySpinner.setSelection(arrayAdapter.getPosition(product.getCategory()));
+            barcode.setText(Long.toString(product.getBarcode()));
 
             setTitle(product.getTitle());
 
         }
 
+    }
+
+
+    public void scanBarcode(View view) {
+        // Do something in response to button
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setPrompt("Scan");
+        integrator.setCameraId(0);
+        integrator.setBeepEnabled(true);
+        integrator.setBarcodeImageEnabled(true);
+        integrator.initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        if (result!=null){
+            if (result.getContents()!=null){
+                Log.d("Barcode", "scanned "+result.getContents());
+                TextView title = (TextView) findViewById(R.id.edit_product_barcode);
+                title.setText(result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode,resultCode,data);
+        }
     }
 
     @Override
@@ -144,13 +175,16 @@ public class AddProductsActivity extends AppCompatActivity {
         Spinner categorySpinner = (Spinner) findViewById(R.id.edit_product_category);
         String selected = categorySpinner.getSelectedItem().toString();
 
+        EditText barcodeTxt = (EditText) findViewById(R.id.edit_product_barcode);
+        long barcode = Long.parseLong(barcodeTxt.getText().toString());
+
         if (title.isEmpty()) {
             Snackbar.make(view, "Please fill title.", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             return;
         }
 
-        Product product = new Product(title, qty, notes, price, selected);
+        Product product = new Product(title, qty, notes, price, selected, barcode);
         SharedPreferences prefs = getSharedPreferences("products",MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = prefs.edit();
         Gson gson = new Gson();

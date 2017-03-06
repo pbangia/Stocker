@@ -14,6 +14,7 @@
     <string name="edit_product_quantity">0</string>
     <string name="edit_product_notes">Edit Product Notes</string>
     <string name="edit_product_price">$0</string>
+    <string name="edit_product_barcode">Enter/Scan barcode</string>
     <string name="button_save">Save</string>
     <string name="edit_category_title">Enter Title</string>
     <string name="action_delete">Delete</string>
