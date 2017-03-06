@@ -3,20 +3,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:text="@string/button_product"
-        android:onClick="showCategories"
-        android:layout_weight="1"/>
+        android:layout_width="match_parent"
+        android:orientation="horizontal" >
+        <Button
+            android:text="@string/button_product"
+            android:onClick="showCategories"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/product"/>
 
-    <ImageButton
-        android:layout_height="80dp"
-        android:background="@drawable/scan"
-        android:onClick="scanBarcode"
-        android:layout_width="80dp"
-        android:layout_weight="1" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/scan"
+            android:text="Lookup"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal" >
+        <Button
+            android:text="New Sale"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/sale"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/stocktake"
+            android:text="Stocktake"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+
 
 </LinearLayout>
