@@ -52,7 +52,10 @@ public class AddProductsActivity extends AppCompatActivity {
 
         String category = getIntent().getStringExtra("clickedCategory");
         ArrayAdapter arrayAdapter = (ArrayAdapter) categorySpinner.getAdapter();
-        categorySpinner.setSelection(arrayAdapter.getPosition(category));
+        if (category!=null){
+            categorySpinner.setSelection(arrayAdapter.getPosition(category));
+        }
+
 
 //        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 //
