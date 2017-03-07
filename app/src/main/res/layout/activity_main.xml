@@ -14,16 +14,17 @@
             android:text="@string/button_product"
             android:onClick="showCategories"
             android:layout_weight="1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/product"/>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/scan"
+            android:drawableTop="@drawable/scan1"
             android:text="Lookup"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:onClick="scanBarcode"/>
     </LinearLayout>
 
     <LinearLayout
@@ -33,12 +34,12 @@
         <Button
             android:text="New Sale"
             android:layout_weight="1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/sale"/>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/stocktake"
             android:text="Stocktake"
