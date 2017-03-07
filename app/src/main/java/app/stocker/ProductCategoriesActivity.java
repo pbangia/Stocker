@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import app.stocker.adapters.ProductListAdapter;
@@ -214,6 +215,32 @@ public class ProductCategoriesActivity extends AppCompatActivity {
                     }
                 })
             .create().show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+        MenuItem item = menu.findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String search) {
+                adapter.getFilter().filter(search);
+                return false;
+            }
+        });
+
+
+        return super.onCreateOptionsMenu(menu);
+
     }
 
 }
