@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,8 @@ import static app.stocker.R.styleable.ActionMode;
 
 public class DisplayProductsActivity extends AppCompatActivity {
     private List<Product> productList = new ArrayList<Product>();
+    private List<Product> searchList = new ArrayList<Product>();
+    private ListView list;
     private ArrayAdapter<Product> adapter;
     private Product listItem;
     private Object mActionMode;
@@ -70,7 +73,7 @@ public class DisplayProductsActivity extends AppCompatActivity {
     private void populateProductList() {
         SharedPreferences prefs = getSharedPreferences("products", MODE_PRIVATE);
         String category = getIntent().getStringExtra("clickedCategory");
-        setTitle(category);
+        setTitle("Products: "+category);
         Map<String,?> keys = prefs.getAll();
         Gson gson = new Gson();
         productList = new ArrayList<>();
@@ -89,7 +92,7 @@ public class DisplayProductsActivity extends AppCompatActivity {
 
     private void populateListView() {
 
-        final ListView list = (ListView) findViewById(R.id.product_list);
+        list = (ListView) findViewById(R.id.product_list);
         adapter = new ProductListAdapter(DisplayProductsActivity.this, R.layout.item_view, productList);
         list.setAdapter(adapter);
         list.setEmptyView(findViewById(R.id.empty));
@@ -124,6 +127,40 @@ public class DisplayProductsActivity extends AppCompatActivity {
 
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+        MenuItem item = menu.findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchList = new ArrayList<Product>();
+                for (Product product: productList){
+                    if (product.getTitle().contains(newText) |
+                            Long.toString(product.getBarcode()).contains(newText)){
+                        searchList.add(product);
+                    }
+                }
+                adapter = new ProductListAdapter(DisplayProductsActivity.this, R.layout.item_view, searchList);
+                list.setAdapter(adapter);
+                return false;
+            }
+        });
+
+
+        return super.onCreateOptionsMenu(menu);
+
     }
 
     private ActionMode.Callback mActionModeCallback = new android.view.ActionMode.Callback() {

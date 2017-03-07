@@ -20,5 +20,7 @@
     <string name="edit_category_title">Enter Title</string>
     <string name="action_delete">Delete</string>
     <string name="no_products">No products.</string>
+    <string name="search_hint">Search Products</string>
+    <string name="search_title">Search Products</string>
 
 </resources>
