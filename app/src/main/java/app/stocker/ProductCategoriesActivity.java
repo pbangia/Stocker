@@ -21,11 +21,11 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import app.stocker.adapters.ProductListAdapter;
 import app.stocker.data.Product;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -220,7 +220,9 @@ public class ProductCategoriesActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_search, menu);
+        inflater.inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.sort_high_price).setVisible(false);
+        menu.findItem(R.id.sort_low_price).setVisible(false);
         MenuItem item = menu.findItem(R.id.menu_search);
         SearchView searchView = (SearchView) item.getActionView();
 
@@ -241,6 +243,35 @@ public class ProductCategoriesActivity extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.sort_az: sortAZ(); break;
+            case R.id.sort_za: sortZA(); break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void sortAZ(){
+        adapter.sort(new Comparator<String>() {
+            public int compare(String arg0, String arg1) {
+                return arg0.compareTo(arg1);
+            }
+        });
+        adapter.notifyDataSetChanged();
+    }
+
+    private void sortZA(){
+        adapter.sort(new Comparator<String>() {
+            public int compare(String arg0, String arg1) {
+                return arg1.compareTo(arg0);
+            }
+        });
+        adapter.notifyDataSetChanged();
     }
 
 }

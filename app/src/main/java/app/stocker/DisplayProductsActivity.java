@@ -4,11 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,10 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import app.stocker.adapters.ProductListAdapter;
@@ -31,10 +26,9 @@ import app.stocker.data.Product;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-
-import static app.stocker.R.styleable.ActionMode;
 
 public class DisplayProductsActivity extends AppCompatActivity {
     private List<Product> productList = new ArrayList<Product>();
@@ -132,7 +126,7 @@ public class DisplayProductsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_search, menu);
+        inflater.inflate(R.menu.menu_main, menu);
         MenuItem item = menu.findItem(R.id.menu_search);
         SearchView searchView = (SearchView) item.getActionView();
 
@@ -161,6 +155,19 @@ public class DisplayProductsActivity extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        switch (id){
+            case R.id.sort_az: sortAZ(); break;
+            case R.id.sort_za: sortZA(); break;
+            case R.id.sort_high_price: sortHighPrice(); break;
+            case R.id.sort_low_price: sortLowPrice(); break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private ActionMode.Callback mActionModeCallback = new android.view.ActionMode.Callback() {
@@ -241,6 +248,42 @@ public class DisplayProductsActivity extends AppCompatActivity {
 //                Toast.makeText(getBaseContext(), productList.get(arg2), Toast.LENGTH_SHORT).show();
 //            }
 //        });
+    }
+
+    private void sortAZ(){
+        adapter.sort(new Comparator<Product>() {
+            public int compare(Product arg0, Product arg1) {
+                return arg0.getTitle().compareTo(arg1.getTitle());
+            }
+        });
+        adapter.notifyDataSetChanged();
+    }
+
+    private void sortZA(){
+        adapter.sort(new Comparator<Product>() {
+            public int compare(Product arg0, Product arg1) {
+                return arg1.getTitle().compareTo(arg0.getTitle());
+            }
+        });
+        adapter.notifyDataSetChanged();
+    }
+
+    private void sortLowPrice(){
+        adapter.sort(new Comparator<Product>() {
+            public int compare(Product arg0, Product arg1) {
+                return Double.compare(arg0.getPrice(), arg1.getPrice());
+            }
+        });
+        adapter.notifyDataSetChanged();
+    }
+
+    private void sortHighPrice(){
+        adapter.sort(new Comparator<Product>() {
+            public int compare(Product arg0, Product arg1) {
+                return Double.compare(arg1.getPrice(), arg0.getPrice());
+            }
+        });
+        adapter.notifyDataSetChanged();
     }
 
 }

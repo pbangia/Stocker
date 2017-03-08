@@ -22,5 +22,9 @@
     <string name="no_products">No products.</string>
     <string name="search_hint">Search Products</string>
     <string name="search_title">Search Products</string>
+    <string name="sort_az">Sort A-Z</string>
+    <string name="sort_za">Sort Z-A</string>
+    <string name="sort_low_price">Sort Lowest Price</string>
+    <string name="sort_high_price">Sort Highest Price</string>
 
 </resources>
