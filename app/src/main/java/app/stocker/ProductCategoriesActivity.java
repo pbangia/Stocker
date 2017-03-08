@@ -118,6 +118,14 @@ public class ProductCategoriesActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (listItem.equals("All")) {
+                new AlertDialog.Builder(ProductCategoriesActivity.this)
+                        .setMessage("Can not modify the default category.")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, null).show();
+                return true;
+            }
+
             switch (item.getItemId()) {
                 case R.id.action_delete2:
                     ProductCategoriesActivity.this.deleteCategoryOption(listItem);
@@ -125,6 +133,7 @@ public class ProductCategoriesActivity extends AppCompatActivity {
                     return true;
                 case R.id.action_edit:
                     ProductCategoriesActivity.this.addCategory(null);
+
                     mode.finish();
                     return true;
             }
@@ -183,14 +192,6 @@ public class ProductCategoriesActivity extends AppCompatActivity {
 
     private void deleteCategoryOption(final String category ){
 
-        if (category.equals("All")) {
-            new AlertDialog.Builder(this)
-                    .setMessage("Can not delete default category.")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(android.R.string.yes, null).show();
-            return;
-
-        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Delete "+category)

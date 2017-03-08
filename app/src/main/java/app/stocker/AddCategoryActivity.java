@@ -5,10 +5,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import app.stocker.data.Product;
 
@@ -71,10 +74,37 @@ public class AddCategoryActivity extends AppCompatActivity {
         String newList = gson.toJson(categories);
         prefsEditor.putString("categories", newList);
         prefsEditor.commit();
+
+        if (selectedCategory!=null && !selectedCategory.equals(title)){
+            updateProductCategories(title);
+        }
         finish();
         //intent.putExtra(EXTRA_MESSAGE, message);
         // Intent intent = new Intent(this, DisplayProductsActivity.class);
         // startActivity(intent);
+    }
+
+    private void updateProductCategories(String title) {
+        SharedPreferences prefs = getSharedPreferences("products", MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        Map<String,?> keys = prefs.getAll();
+        String json;
+        Gson gson = new Gson();
+
+        for(Map.Entry<String,?> entry : keys.entrySet()){
+            json = prefs.getString(entry.getKey(), "");
+            if (!json.isEmpty()){
+                Product product = gson.fromJson(json, Product.class);
+                if (selectedCategory.equals(product.getCategory())) {
+                    product.setCategory(title);
+                    json = gson.toJson(product, Product.class);
+                    prefsEditor.putString(entry.getKey(), json);
+                }
+
+            }
+        }
+
+        prefsEditor.commit();
     }
 
 
